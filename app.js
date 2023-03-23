@@ -16,7 +16,7 @@ mongoose
 
 const studentSchema = new Schema({
     name: String, //{type:String}
-    age: Number,
+    age: { type: Number, min: [0, "Age cannot less than 0"] }, //Number,
     major: String,
     money: {
         TWD: Number,
@@ -26,33 +26,16 @@ const studentSchema = new Schema({
 
 const Student = mongoose.model("Student", studentSchema);
 
-// app.get("/", async (req, res) => {
-//     try {
-//         let data = await Student.find().exec();
-//         res.send(data);
-//         console.log(data);
-//     } catch (e) {
-//         console.log(e);
-//     }
-// });
+// Student.findOneAndUpdate({ name: "Liya" }, { name: "Liya Tsai" }, { runValidators: true, new: true })
+//     .exec()
+//     .then((newData) => {
+//         console.log(newData);
+//     });
 
-app.get("/", async (req, res) => {
-    try {
-        let data = await Student.findOne({ name: "Mario" }).exec();
-        res.send(data);
-        console.log(data);
-    } catch (e) {
-        console.log(e);
-    }
-});
-
-Student.find({})
+Student.findOneAndUpdate({ name: "Liya Tsai" }, { name: "Liya " }, { runValidators: true, new: false })
     .exec()
-    .then((data) => {
-        console.log(data);
-    })
-    .catch((e) => {
-        console.log(e);
+    .then((newData) => {
+        console.log(newData);
     });
 
 app.listen(4000, () => {
@@ -77,4 +60,74 @@ app.listen(4000, () => {
 //     })
 //     .catch((e) => {
 //         console.log(e);
+//     });
+
+// C"R"UD
+// app.get("/", async (req, res) => {
+//     try {
+//         let data = await Student.find().exec();
+//         res.send(data);
+//         console.log(data);
+//     } catch (e) {
+//         console.log(e);
+//     }
+// });
+
+// app.get("/", async (req, res) => {
+//     try {
+//         let data = await Student.findOne({ name: "Mario" }).exec();
+//         res.send(data);
+//         console.log(data);
+//     } catch (e) {
+//         console.log(e);
+//     }
+// });
+
+// Student.find({})
+//     .exec()
+//     .then((data) => {
+//         console.log(data);
+//     })
+//     .catch((e) => {
+//         console.log(e);
+//     });
+
+// CR"U"D
+// let newStudent = new Student({
+//     name: "John",
+//     age: -30,
+//     major: "Art",
+//     money: {
+//         TWD: 1000,
+//         USD: 2000,
+//     },
+// });
+
+// let newStudent = new Student({
+//     name: "John",
+//     age: 30,
+//     major: "Art",
+//     money: {
+//         TWD: 1000,
+//         USD: 2000,
+//     },
+// });
+
+// newStudent.save().then((data) => {
+//     console.log("Success");
+// });
+
+// Student.updateOne({ name: "Liya" }, { age: 49 }, { runValidators: true })
+//     .exec()
+//     .then((msg) => {
+//         console.log(msg);
+//     })
+//     .catch((e) => {
+//         console.log(e);
+//     });
+
+// Student.find({})
+//     .exec()
+//     .then((data) => {
+//         console.log(data);
 //     });
