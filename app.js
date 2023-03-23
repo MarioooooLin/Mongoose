@@ -25,20 +25,31 @@ const studentSchema = new Schema({
 });
 
 const Student = mongoose.model("Student", studentSchema);
-const newObj = new Student({
-    name: "Roy",
-    age: 30,
-    major: "Math",
-    money: {
-        TWD: 6000,
-        USD: 7000,
-    },
+
+// app.get("/", async (req, res) => {
+//     try {
+//         let data = await Student.find().exec();
+//         res.send(data);
+//         console.log(data);
+//     } catch (e) {
+//         console.log(e);
+//     }
+// });
+
+app.get("/", async (req, res) => {
+    try {
+        let data = await Student.findOne({ name: "Mario" }).exec();
+        res.send(data);
+        console.log(data);
+    } catch (e) {
+        console.log(e);
+    }
 });
-newObj
-    .save()
-    .then((saveObj) => {
-        console.log("Data has been storage");
-        console.log(saveObj);
+
+Student.find({})
+    .exec()
+    .then((data) => {
+        console.log(data);
     })
     .catch((e) => {
         console.log(e);
@@ -47,3 +58,23 @@ newObj
 app.listen(4000, () => {
     console.log("Listening prot 4000...");
 });
+
+// "C"RUD
+// const newObj = new Student({
+//     name: "Roy",
+//     age: 30,
+//     major: "Math",
+//     money: {
+//         TWD: 6000,
+//         USD: 7000,
+//     },
+// });
+// newObj
+//     .save()
+//     .then((saveObj) => {
+//         console.log("Data has been storage");
+//         console.log(saveObj);
+//     })
+//     .catch((e) => {
+//         console.log(e);
+//     });
