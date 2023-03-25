@@ -2,6 +2,7 @@ const express = require("express");
 const app = express();
 const mongoose = require("mongoose");
 const { Schema } = mongoose;
+const fs = require("fs");
 
 app.set("view engine", "ejs");
 
@@ -49,19 +50,39 @@ const studentSchema = new Schema(
     // }
 );
 // 第二種Instance methods
-// studentSchema.methods.printTotal = function () {
-//     return this.money.TWD + this.money.USD;
-// };
+studentSchema.methods.printTotal = function () {
+    return this.money.TWD + this.money.USD;
+};
+
+studentSchema.pre("save", () => {
+    fs.writeFile("record.txt", "A new data...", (e) => {
+        if (e) throw e;
+    });
+});
 
 const Student = mongoose.model("Student", studentSchema);
 
-Student.findAllMajor("Art")
-    .then((data) => {
-        console.log(data);
-    })
-    .catch((e) => {
-        console.log(e);
-    });
+let newStudent = new Student({
+    name: "Lee",
+    age: 25,
+    major: "Math",
+    money: {
+        TWD: 1000,
+        USD: 2000,
+    },
+});
+
+newStudent.save().then((data) => {
+    console.log("Saved");
+});
+
+// Student.findAllMajor("Art")
+//     .then((data) => {
+//         console.log(data);
+//     })
+//     .catch((e) => {
+//         console.log(e);
+//     });
 
 Student.find({})
     .exec()
