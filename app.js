@@ -14,34 +14,61 @@ mongoose
         console.log(e);
     });
 
-const studentSchema = new Schema({
-    name: { type: String, required: true, maxlength: 5 }, //String,
-    age: { type: Number, min: [0, "Age cannot less than 0"] }, //Number,
-    major: {
-        type: String,
-        required: function () {
-            return this.money.TWD >= 3000;
+const studentSchema = new Schema(
+    {
+        name: { type: String, required: true, maxlength: 5 }, //String,
+        age: { type: Number, min: [0, "Age cannot less than 0"] }, //Number,
+        major: {
+            type: String,
+            required: function () {
+                return this.money.TWD >= 3000;
+            },
+            enum: ["Math", "Chinese", "Science"],
         },
-        enum: ["Math", "Chinese", "Science"],
+        money: {
+            TWD: Number,
+            USD: Number,
+        },
     },
-    money: {
-        TWD: Number,
-        USD: Number,
-    },
-});
+    {
+        statics: {
+            findAllMajor(major) {
+                console.log(this);
+                this.find({ major: major }).exec();
+            },
+        },
+    }
+
+    //第一種Instance methods
+    // {
+    //     methods: {
+    //         printTotal() {
+    //             return this.money.TWD + this.money.USD;
+    //         },
+    //     },
+    // }
+);
+// 第二種Instance methods
+// studentSchema.methods.printTotal = function () {
+//     return this.money.TWD + this.money.USD;
+// };
 
 const Student = mongoose.model("Student", studentSchema);
 
-// Student.findOneAndUpdate({ name: "Liya" }, { name: "Liya Tsai" }, { runValidators: true, new: true })
-//     .exec()
-//     .then((newData) => {
-//         console.log(newData);
-//     });
+Student.findAllMajor("Art")
+    .then((data) => {
+        console.log(data);
+    })
+    .catch((e) => {
+        console.log(e);
+    });
 
-Student.findOneAndUpdate({ name: "Liya Tsai" }, { name: "Liya " }, { runValidators: true, new: false })
+Student.find({})
     .exec()
-    .then((newData) => {
-        console.log(newData);
+    .then((arr) => {
+        arr.forEach((student) => {
+            console.log(student.name + " total money is " + student.printTotal());
+        });
     });
 
 app.listen(4000, () => {
@@ -136,4 +163,16 @@ app.listen(4000, () => {
 //     .exec()
 //     .then((data) => {
 //         console.log(data);
+//     });
+
+// Student.findOneAndUpdate({ name: "Liya" }, { name: "Liya Tsai" }, { runValidators: true, new: true })
+//     .exec()
+//     .then((newData) => {
+//         console.log(newData);
+//     });
+
+// Student.findOneAndUpdate({ name: "Liya Tsai" }, { name: "Liya " }, { runValidators: true, new: false })
+//     .exec()
+//     .then((newData) => {
+//         console.log(newData);
 //     });
