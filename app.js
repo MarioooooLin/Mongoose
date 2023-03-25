@@ -15,9 +15,15 @@ mongoose
     });
 
 const studentSchema = new Schema({
-    name: String, //{type:String}
+    name: { type: String, required: true, maxlength: 5 }, //String,
     age: { type: Number, min: [0, "Age cannot less than 0"] }, //Number,
-    major: String,
+    major: {
+        type: String,
+        required: function () {
+            return this.money.TWD >= 3000;
+        },
+        enum: ["Math", "Chinese", "Science"],
+    },
     money: {
         TWD: Number,
         USD: Number,
